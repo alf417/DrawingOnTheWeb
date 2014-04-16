@@ -1,0 +1,42 @@
+<html>
+
+	<head>
+
+		<meta charset="UTF-8">
+		<title> My First Canvas Drawing </title>
+
+		<style>
+			canvas {
+				border: 1px solid black;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<canvas id="tabula-rasa" width="400" height="300">
+
+			Your Browser Doesn't Support The Canvas Element.
+
+		</canvas>
+
+		<script>
+			var canvas = document.getElementById("tabula-rasa");
+			var context = canvas.getContext("2d");
+
+			context.fillStyle = "darkBlue";
+			context.strokeStyle = "gray";
+
+			context.fillRect(100, 50, 200, 200);
+			context.clearRect(150, 100, 100, 100);
+			context.strokeRect(175, 125, 50, 50);
+
+			context.moveTo(0,0);
+			context.lineTo(400,300);
+			context.stroke();
+
+		</script>
+
+	</body>
+
+</html>

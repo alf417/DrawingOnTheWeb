@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+	<title>HTML5 Canvas</title>
+	
+	<style>
+		body {
+ 			background-color: darkBlue;
+		}
+
+		#container {
+			width: 2125px;
+			height: 100%;
+			margin: auto;
+		}
+		
+		#canvas {
+			width: inherit;
+			height: 450px;
+			position: absolute;
+			top: 50%;
+			margin-top: -225px;
+			padding-left: 25px;
+			padding-right: 25px; 
+		}
+
+		canvas {
+			margin-left: 50px;
+			margin-right: 50px;
+			background-color: #FE2E2E;
+		}
+
+		img {
+			display: none;
+		}
+	</style>
+</head>
+
+<body>
+	<img src="bluebonnet.JPG" id="bluebonnet" alt="Bluebonnet">
+	<img src="blackEyedSusan.jpg" id="blackEyedSusan" alt="blackEyedSusan">
+
+	<div id="container">
+		<div id="canvas">
+			<canvas id="canvas1" width="600" height="450"></canvas>
+			<canvas id="canvas2" width="600" height="450"></canvas>
+			<canvas id="canvas3" width="600" height="450"></canvas>
+		</div>
+	</div>
+
+	<script src="HTML5.js"></script>
+
+</body>
+
+</html>
