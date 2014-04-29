@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>WebGL</title>
+
+		<style>
+			body {
+				background-color: white;
+				margin: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="three.min.js"></script>
+		<script src="OrbitControls.js"></script>
+
+		<script>
+			var camera, scene, renderer;
+			var geometry, material, mesh;
+
+			function init() {
+				scene = new THREE.Scene();
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+
+				camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 25000);
+				camera.position.set(0, 200, 700);
+				scene.add(camera);
+
+				var spotlight = new THREE.SpotLight(0xffffff);
+				spotlight.position.set(500, 500, 500);
+				spotlight.shadowDarkness = 0.3;
+				spotlight.intensity = 2;
+				spotlight.castShadow = true;
+				scene.add(spotlight);
+
+				var texture = THREE.ImageUtils.loadTexture("wrapping4.jpg");
+				material = new THREE.MeshLambertMaterial({map: texture});
+
+				var texture2 = new THREE.ImageUtils.loadTexture("wrapping1.jpg");
+				wrapping = new THREE.MeshLambertMaterial({map: texture2});
+
+				var texture3 = new THREE.ImageUtils.loadTexture("wrapping3.jpg");
+				wrapping2 = new THREE.MeshLambertMaterial({map: texture3});
+
+				geometry = new THREE.OctahedronGeometry(100, 0);
+				mesh = new THREE.Mesh(geometry, material);
+				mesh.position.y = 100;
+				mesh.castShadow = true;
+				scene.add(mesh);	
+
+				cubeGeometry = new THREE.CubeGeometry(150, 150, 150);
+				cube = new THREE.Mesh(cubeGeometry, wrapping);
+				cube.position.y = 135;
+				cube.position.x = -250;
+				cube.castShadow = true;
+				scene.add(cube);		
+
+				boxGeometry = new THREE.CubeGeometry(250, 250, 250);
+				box = new THREE.Mesh(cubeGeometry, wrapping2);
+				box.position.y = 145;
+				box.position.x = 250;
+				box.castShadow = true;
+				scene.add(box);		
+				
+				var planeTexture = THREE.ImageUtils.loadTexture("RedVelvet.jpg");
+				planeGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
+				planeMaterial = new THREE.MeshLambertMaterial({map: planeTexture, side: THREE.DoubleSide});
+				plane = new THREE.Mesh(planeGeometry, planeMaterial);
+				plane.rotation.x = Math.PI / -2;
+				plane.receiveShadow = true;
+				scene.add(plane);
+
+				renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true});
+				renderer.setSize(width, height);
+				renderer.shadowMapEnabled = true;
+
+				controls = new THREE.OrbitControls(camera, renderer.domElement);
+				
+				document.body.appendChild(renderer.domElement);
+			}
+
+			function animate() {
+				requestAnimationFrame(animate);
+
+				mesh.rotation.y += 0.01;
+				mesh.rotation.x += 0.01;
+
+				cube.rotation.y += -0.01;
+				cube.rotation.x += -0.01;
+
+				box.rotation.y += -0.01;
+				box.rotation.x += -0.01;
+
+				renderer.render(scene, camera);
+
+				controls.update();
+			}
+
+			init();
+			animate();
+		</script>
+	</body>
+
+</html>
