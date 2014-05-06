@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Skybox with Mirror Sphere Constellation</title>
+
+		<style>
+			body {
+				background-color: black;
+				margin: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="three.min.js"></script>
+		<script src="OrbitControls.js"></script>
+		<script src="helvetiker_regular.typeface.js"></script>
+
+		<script>
+			var camera, scene, renderer;
+			var geometry, material, mesh;
+
+			function init() {
+				scene = new THREE.Scene();
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+
+				camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 25000);
+				camera.position.set(0, 200, 700);
+				scene.add(camera);
+
+				var light = new THREE.DirectionalLight(0xffffff, 1);
+				light.position.set(1, 1, 1);
+				scene.add(light);
+
+				mirrorCamera = new THREE.CubeCamera(0.1, 5000, 512);
+				scene.add(mirrorCamera);
+
+				var wrapping = THREE.ImageUtils.loadTexture("wrapping1.jpg");
+				material = new THREE.MeshLambertMaterial({map: wrapping});
+
+				textMaterial = new THREE.MeshLambertMaterial({color: 0x006633});
+
+				text = new THREE.TextGeometry("YES", {size: 40, height: 10, surveSegments: 20, font: "helvetiker", bevelEnabled: true, bevelThickness: 4, bevelSize: 2});			
+
+				for (var j = 0; j < 1000; j++) {
+					var meshText = new THREE.Mesh(text, textMaterial);
+					meshText.position.x = (Math.random() - 0.5) * 5000;
+					meshText.position.y = (Math.random() - 0.5) * 5000;
+					meshText.position.z = (Math.random() - 0.5) * 5000;
+					mirrorCamera.position = meshText.position;
+					meshText.updateMatrix();
+					meshText.matrixAutoUpdate = false;
+					scene.add(meshText);
+				}
+
+				var geometry = new THREE.CubeGeometry(50, 50, 50);
+
+				for (var i = 0; i < 1000; i++) {
+					var mesh = new THREE.Mesh(geometry, material);
+					mesh.position.x = (Math.random() - 0.5) * 5000;
+					mesh.position.y = (Math.random() - 0.5) * 5000;
+					mesh.position.z = (Math.random() - 0.5) * 5000;
+					mirrorCamera.position = mesh.position;
+					mesh.updateMatrix();
+					mesh.matrixAutoUpdate = false;
+					scene.add(mesh);
+				}
+
+
+				var materialArray = [];
+
+				xpos = THREE.ImageUtils.loadTexture('posx.jpg');
+				materialArray.push(new THREE.MeshBasicMaterial({map: xpos}));
+
+				xneg = THREE.ImageUtils.loadTexture('negx.jpg');
+				materialArray.push(new THREE.MeshBasicMaterial({map: xneg}));
+
+				ypos = THREE.ImageUtils.loadTexture('posy.jpg');
+				materialArray.push(new THREE.MeshBasicMaterial({map: ypos}));
+
+				yneg = THREE.ImageUtils.loadTexture('negy.jpg');
+				materialArray.push(new THREE.MeshBasicMaterial({map: yneg}));
+
+				zpos = THREE.ImageUtils.loadTexture('posz.jpg');
+				materialArray.push(new THREE.MeshBasicMaterial({map: zpos}));
+
+				zneg = THREE.ImageUtils.loadTexture('negz.jpg');
+				materialArray.push(new THREE.MeshBasicMaterial({map: zneg}));
+
+				for (var i = 0; i < 6; i++) {
+					materialArray[i].side = THREE.BackSide;
+				}
+
+				var skyboxMaterial = new THREE.MeshFaceMaterial(materialArray);
+				var skyboxGeometry = new THREE.BoxGeometry(5000, 5000, 5000);
+				var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+				scene.add(skybox);
+
+				renderer = new THREE.WebGLRenderer({alpha: 1, antialias: true});
+				renderer.setSize(width, height);
+
+				controls = new THREE.OrbitControls(camera, renderer.domElement);
+				
+				document.body.appendChild(renderer.domElement);
+			}
+
+			function windowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix(); // updates camera
+
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			}
+
+			function animate() {
+				requestAnimationFrame(animate);
+
+				mirrorCamera.updateCubeMap(renderer, scene);
+
+				var date = new Date();
+				var timer = date.getTime() * 0.0002;
+				camera.position.x = 800 * Math.cos(timer);
+				camera.position.z = 800 * Math.sin(timer);
+
+				controls.update();
+
+				renderer.render(scene, camera);
+			}
+
+			init();
+			animate();
+
+			window.addEventListener('resize', windowResize, false);
+		</script>
+	</body>
+
+</html>
